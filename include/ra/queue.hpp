@@ -135,6 +135,8 @@ namespace ra::concurrency {
 				if(stat_ != status::closed){
 					stat_ = status::closed;
 				}
+				c_full_.notify_all();
+				c_empty_.notify_all();
 			}
 
 			// Clears the queue.
@@ -148,6 +150,7 @@ namespace ra::concurrency {
 					}
 					if(stat_ != status::closed){
 						stat_ = status::empty;
+						c_full_.notify_all();
 					}
 				}
 			}
@@ -156,21 +159,21 @@ namespace ra::concurrency {
 			// elements in the queue equals the maximum queue size).
 			// This function is not thread safe.
 			bool is_full() const{
-				std::scoped_lock<std::mutex> lock(m_);
+				//std::scoped_lock<std::mutex> lock(m_);
 				return (queue_.size()==capacity_);
 			}
 
 			// Returns if the queue is currently empty.
 			// This function is not thread safe.
 			bool is_empty() const{
-				std::scoped_lock<std::mutex> lock(m_);
+				//std::scoped_lock<std::mutex> lock(m_);
 				return (queue_.empty());
 			}
 
 			// Returns if the queue is closed (i.e., in the closed state).
 			// This function is not thread safe.
 			bool is_closed() const{
-				std::scoped_lock<std::mutex> lock(m_);
+				//std::scoped_lock<std::mutex> lock(m_);
 				return (stat_==status::closed);
 			}
 
@@ -178,7 +181,7 @@ namespace ra::concurrency {
 			// the queue.
 			// This function is not thread safe.
 			size_type max_size() const{
-				std::scoped_lock<std::mutex> lock(m_);
+				//std::scoped_lock<std::mutex> lock(m_);
 				return capacity_;
 			}
 
