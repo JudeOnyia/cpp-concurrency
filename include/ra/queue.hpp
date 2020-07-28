@@ -1,6 +1,11 @@
 #ifndef QUEUEHPP
 #define QUEUEHPP
-
+#include <cstddef>
+#include <queue>
+#include <utility>
+#include <mutex>
+#include <thread>
+#include <condition_variable>
 
 namespace ra::concurrency {
 
@@ -31,7 +36,7 @@ namespace ra::concurrency {
 			// The queue is marked as open (i.e., not closed).
 			// Precondition: The quantity max_size must be greater than
 			// zero.
-			queue(size_type max_size);
+			queue(size_type max_size) : capacity_(max_size), stat_(status::empty) {}
 
 			// A queue is not movable or copyable.
 			queue(const queue&) = delete;
@@ -41,7 +46,10 @@ namespace ra::concurrency {
 
 			// Destroys the queue after closing the queue (if not already
 			// closed) and clearing the queue (if not already empty).
-			˜queue(); //FIX SYMBOL
+			~queue(){
+				close();
+				clear();
+			}
 
 			// Inserts the value x at the end of the queue, blocking if
 			// necessary.
@@ -56,7 +64,27 @@ namespace ra::concurrency {
 			// Note: The rvalue reference parameter is intentional and
 			// implies that the push function is permitted to change
 			// the value of x (e.g., by moving from x).
-			status push(value_type&& x);
+			status push(value_type&& x){
+				std::unique_lock<std::mutex> lock(m_);
+				c_full_.wait(lock, [this](){ return (stat_!= status::full);});
+				if(stat_==status::closed){
+					return stat_;
+				}
+				else {
+					queue_.push(std::move(x));
+					if(queue_.size()==capacity_){
+						stat_ = status::full;
+					}
+					if(stat_==status::empty){
+						stat_ = status::success;
+					}
+					c_empty_.notify_one();
+					return (status::success);
+				}
+				//lock.unlock();
+				//c_empty_.notify_one();
+				//return (status::success);
+			}
 
 			// Removes the value from the front of the queue and places it
 			// in x, blocking if necessary.
@@ -72,7 +100,28 @@ namespace ra::concurrency {
 			// the queue being both empty and closed), the function returns
 			// status::closed.
 			// This function is thread safe.
-			status pop(value_type& x);
+			status pop(value_type& x){
+				std::unique_lock<std::mutex> lock(m_);
+				c_empty_.wait(lock, [this](){ return (stat_!= status::empty);});
+				if((stat_==status::closed) && (queue_.empty())){
+					return stat_;
+				}
+				else{
+					x = queue_.front();
+					queue_.pop();
+					if(stat_==status::full){
+						stat_ = status::success;
+					}
+					if((stat_!=status::closed) && (queue_.empty())){
+						stat_ = status::empty;
+					}
+					c_full_.notify_one();
+					return (status::success);
+				}
+				//lock.unlock();
+				//c_full_.notify_one();
+				//return (status::success);
+			}
 
 			// Closes the queue.
 			// The queue is placed in the closed state.
@@ -81,30 +130,66 @@ namespace ra::concurrency {
 			// already on the queue.
 			// Invoking this function on a closed queue has no effect.
 			// This function is thread safe.
-			void close();
+			void close(){
+				std::scoped_lock<std::mutex> lock(m_);
+				if(stat_ != status::closed){
+					stat_ = status::closed;
+				}
+			}
 
 			// Clears the queue.
 			// All of the elements on the queue are discarded.
 			// This function is thread safe.
-			void clear();
+			void clear(){
+				std::scoped_lock<std::mutex> lock(m_);
+				if(stat_ != status::empty || (!queue_.empty())){
+					while(!(queue_.empty())){
+						queue_.pop();
+					}
+					if(stat_ != status::closed){
+						stat_ = status::empty;
+					}
+				}
+			}
 
 			// Returns if the queue is currently full (i.e., the number of
 			// elements in the queue equals the maximum queue size).
 			// This function is not thread safe.
-			bool is_full() const;
+			bool is_full() const{
+				std::scoped_lock<std::mutex> lock(m_);
+				return (queue_.size()==capacity_);
+			}
 
 			// Returns if the queue is currently empty.
 			// This function is not thread safe.
-			bool is_empty() const;
+			bool is_empty() const{
+				std::scoped_lock<std::mutex> lock(m_);
+				return (queue_.empty());
+			}
 
 			// Returns if the queue is closed (i.e., in the closed state).
 			// This function is not thread safe.
-			bool is_closed() const;
+			bool is_closed() const{
+				std::scoped_lock<std::mutex> lock(m_);
+				return (stat_==status::closed);
+			}
 
 			// Returns the maximum number of elements that can be held in
 			// the queue.
 			// This function is not thread safe.
-			size_type max_size() const;
+			size_type max_size() const{
+				std::scoped_lock<std::mutex> lock(m_);
+				return capacity_;
+			}
+
+		private:
+			std::queue<value_type> queue_;
+			mutable std::mutex m_;
+			mutable std::condition_variable c_empty_;
+			mutable std::condition_variable c_full_;
+
+			size_type capacity_;
+			status stat_;
 
 	};
 
