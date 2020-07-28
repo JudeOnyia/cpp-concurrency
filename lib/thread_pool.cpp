@@ -14,8 +14,8 @@ namespace ra::concurrency {
 				lock.lock();
 			}
 		}
-		obj->c_done_.notify_all();
 		obj->shutDownFinished_ = true;
+		obj->c_done_.notify_all();
 	}
 
 }

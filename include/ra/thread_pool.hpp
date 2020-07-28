@@ -81,7 +81,9 @@ namespace ra::concurrency {
 		~thread_pool(){
 			shutdown();
 			for(auto& i : workers){
-				i.join();
+				if(i.joinable()){
+					i.join();
+				}
 			}
 		}
 
@@ -106,15 +108,15 @@ namespace ra::concurrency {
 		// This function is thread safe.
 		void schedule(std::function<void()>&& funcc){
 			std::unique_lock<std::mutex> lock(m_);
-			if(shutDown_){
+			/*if(shutDown_){
 				c_done_.wait(lock, [this](){ return (queue_.is_empty()); });
 			}
-			else{
+			else{*/
 				c_add_.wait(lock, [this](){ return ((!queue_.is_full()) || (shutDown_)); });
 				if(!shutDown_){
 					queue_.push(std::move(funcc));
 				}
-			}
+			//}
 		}
 
 		// Shuts down the thread pool.
@@ -130,11 +132,13 @@ namespace ra::concurrency {
 		// After the thread pool is shutdown, it can only be destroyed.
 		// This function is thread safe.
 		void shutdown(){
-			std::scoped_lock<std::mutex> lock(m_);
+			std::unique_lock<std::mutex> lock(m_);
 			if(!shutDown_){
 				shutDown_ = true;
+				queue_.close();
+				c_task_.notify_all();
+				c_done_.wait(lock, [this](){ return (queue_.is_empty()); });
 			}
-			c_task_.notify_all();
 		}
 
 		// Tests if the thread pool has been shutdown.
