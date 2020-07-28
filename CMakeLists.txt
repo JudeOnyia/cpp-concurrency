@@ -22,7 +22,9 @@ find_package(Threads REQUIRED)
 # Add Executable Program
 add_executable(test_queue app/test_queue.cpp)
 add_executable(test_thread_pool app/test_thread_pool.cpp lib/thread_pool.cpp)
+add_executable(test_julia_set app/test_julia_set.cpp)
 
 # Set the libraries for the target
 target_link_libraries(test_queue Threads::Threads)
 target_link_libraries(test_thread_pool Threads::Threads)
+target_link_libraries(test_julia_set Threads::Threads)
