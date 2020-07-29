@@ -34,6 +34,4 @@ int main(){
 		outFile<<"\n";
 	}
 	outFile.close();
-	
-
 }

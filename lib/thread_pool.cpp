@@ -1,6 +1,7 @@
 #include "ra/thread_pool.hpp"
 
 namespace ra::concurrency {
+	// Function performed by each thread
 	void worker(thread_pool* obj){
 		std::unique_lock<std::mutex> lock(obj->m_);
 		while(!(obj->shutDown_ && obj->queue_.is_empty())){
@@ -17,5 +18,4 @@ namespace ra::concurrency {
 		obj->shutDownFinished_ = true;
 		obj->c_done_.notify_all();
 	}
-
 }

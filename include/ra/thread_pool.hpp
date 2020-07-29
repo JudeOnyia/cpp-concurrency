@@ -25,22 +25,6 @@ namespace ra::concurrency {
 
 		// Function performed by each thread
 		friend void worker(thread_pool*);
-		/*void worker(){
-			std::unique_lock<std::mutex> lock(m_);
-			while(!(shutDown_ && queue_.is_empty())){
-				c_task_.wait(lock, [this](){ return ((allThreadsMade_ && (!queue_.is_empty())) || (shutDown_));});
-				if(!queue_.is_empty()){
-					func task_;
-					queue_.pop(task_);
-					lock.unlock();
-					c_add_.notify_one();
-					task_();
-					lock.lock();
-				}
-			}
-			c_done_.notify_all();
-			shutDownFinished_ = true;
-		}*/
 
 		// Creates a thread pool with the number of threads equal to the
 		// hardware concurrency level (if known); otherwise the number of
@@ -108,15 +92,10 @@ namespace ra::concurrency {
 		// This function is thread safe.
 		void schedule(std::function<void()>&& funcc){
 			std::unique_lock<std::mutex> lock(m_);
-			/*if(shutDown_){
-				c_done_.wait(lock, [this](){ return (queue_.is_empty()); });
+			c_add_.wait(lock, [this](){ return ((!queue_.is_full()) || (shutDown_)); });
+			if(!shutDown_){
+				queue_.push(std::move(funcc));
 			}
-			else{*/
-				c_add_.wait(lock, [this](){ return ((!queue_.is_full()) || (shutDown_)); });
-				if(!shutDown_){
-					queue_.push(std::move(funcc));
-				}
-			//}
 		}
 
 		// Shuts down the thread pool.
@@ -161,9 +140,5 @@ namespace ra::concurrency {
 		size_type num_threads_;
 
 	};
-
-
-
-
 }
 #endif
