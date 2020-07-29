@@ -1,0 +1,21 @@
+-- The CXX compiler identification is GNU 9.3.0
+-- Check for working CXX compiler: /home/frodo/public/ugls_lab-4.0.70/bin/g++
+-- Check for working CXX compiler: /home/frodo/public/ugls_lab-4.0.70/bin/g++ - works
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Thread pool found: 1
+-- Fractal found: 1
+-- Looking for C++ include pthread.h
+-- Looking for C++ include pthread.h - found
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+-- Looking for pthread_create in pthreads
+-- Looking for pthread_create in pthreads - not found
+-- Looking for pthread_create in pthread
+-- Looking for pthread_create in pthread - found
+-- Found Threads: TRUE  
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/judeonyia/Documents/ECE596C_Assignments/ECE596C_Assgn_6/cpp_concurrency-JudeOnyia/Assgn_precheck/package-fractal_sane/derived

@@ -1,0 +1,72 @@
+commit 19d2b0001c79106add9efa3ecb5097509fe8653c
+Author: JudeOnyia <60678029+JudeOnyia@users.noreply.github.com>
+Date:   Mon Jul 27 00:54:28 2020 -0700
+
+    First commit
+
+commit f6e196dc3a5c67e55ddca3110ef2562ce1b8ca9d
+Author: JudeOnyia <60678029+JudeOnyia@users.noreply.github.com>
+Date:   Mon Jul 27 12:19:51 2020 -0700
+
+    Added Sanitizers
+
+commit 3f7ae0e44d6a141f9ef7fda32677fbbd4a243a85
+Author: root <judeonyia10@gmail.com>
+Date:   Mon Jul 27 19:42:58 2020 -0700
+
+    1) Wrote function to push and pop elements in and from the queue
+    2) Wrote function to clear and close the queue
+    3) Wrote is_full, is_empty, is_closed and max_size functions
+
+commit 023de44ae5f2f842985e89a2a34cf51390db511c
+Author: JudeOnyia <60678029+JudeOnyia@users.noreply.github.com>
+Date:   Mon Jul 27 20:24:48 2020 -0700
+
+    1) Set up made for thread pool class
+
+commit dcaa5f5de461c99086ecb690acfc88ccc1cc6186
+Author: root <judeonyia10@gmail.com>
+Date:   Tue Jul 28 02:28:57 2020 -0700
+
+    1) Prevented some potential infinite waits in queue class
+    2) Wrote the constructors and destructors of thread_pool class
+    3) Wrote the friend function Worker to be used by threads
+    4) Wrote the schedule function to put tasks on the queue
+    5) Wrote the shutdown function
+    6) Wrote the size and is_shutdown functions
+
+commit 83961c676fb7b28c3eae3f0880e4a171919a9ce1
+Author: root <judeonyia10@gmail.com>
+Date:   Tue Jul 28 13:51:54 2020 -0700
+
+    1) Checks if a thread is joinable before joining in threadpool
+       destructor
+    2) Made shutdown function blocking instead of schedule function
+
+commit 61c2b12e95fe6fb755cf31ff04e1a802e9945d5d
+Author: JudeOnyia <60678029+JudeOnyia@users.noreply.github.com>
+Date:   Tue Jul 28 14:06:38 2020 -0700
+
+    1) Set up for julia set
+
+commit c1542b5b17394d01666d5a5f407176a68cfda637
+Author: root <judeonyia10@gmail.com>
+Date:   Tue Jul 28 20:59:57 2020 -0700
+
+    1) Wrote helper function getZ to calculate z from the info given
+    2) Wrote helper function julia_ym to calculate the ym term given z
+    3) Wrote function to compute julia set
+    4) Wrote test for function and visualized result
+
+commit baa6932f2bbb41311db54bff27f6b5e5488d82f9
+Author: root <judeonyia10@gmail.com>
+Date:   Tue Jul 28 23:25:48 2020 -0700
+
+    1) Used the chrono library to recored execution time of julia set program
+
+commit 223db394dec9c37c53f3285049e145999463bd1a
+Author: JudeOnyia <60678029+JudeOnyia@users.noreply.github.com>
+Date:   Wed Jul 29 00:01:50 2020 -0700
+
+    1) Recorded the execution time of julia set in README.pdf
+    2) Removed Sanitizer.cmake
