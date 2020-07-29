@@ -1,5 +1,0 @@
-/home/judeonyia/Documents/ECE596C_Assignments/ECE596C_Assgn_6/cpp_concurrency-JudeOnyia/Assgn_precheck/package-fractal_orig/derived/CMakeFiles/rebuild_cache.dir
-/home/judeonyia/Documents/ECE596C_Assignments/ECE596C_Assgn_6/cpp_concurrency-JudeOnyia/Assgn_precheck/package-fractal_orig/derived/CMakeFiles/edit_cache.dir
-/home/judeonyia/Documents/ECE596C_Assignments/ECE596C_Assgn_6/cpp_concurrency-JudeOnyia/Assgn_precheck/package-fractal_orig/derived/CMakeFiles/test_thread_pool.dir
-/home/judeonyia/Documents/ECE596C_Assignments/ECE596C_Assgn_6/cpp_concurrency-JudeOnyia/Assgn_precheck/package-fractal_orig/derived/CMakeFiles/test_julia_set.dir
-/home/judeonyia/Documents/ECE596C_Assignments/ECE596C_Assgn_6/cpp_concurrency-JudeOnyia/Assgn_precheck/package-fractal_orig/derived/CMakeFiles/test_queue.dir

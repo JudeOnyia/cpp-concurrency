@@ -1,1 +1,0 @@
-../../../distribution//app/test_julia_set.cpp

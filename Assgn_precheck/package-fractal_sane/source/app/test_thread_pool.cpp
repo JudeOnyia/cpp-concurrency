@@ -1,1 +1,0 @@
-../../../distribution//app/test_thread_pool.cpp
